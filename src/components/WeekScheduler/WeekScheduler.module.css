@@ -1,0 +1,327 @@
+:root {
+    --timeline-width: 50px;
+    --header-height: 50px;
+
+    --z-index-time-label: 10;
+    --z-index-day-label: 20;
+    --z-index-header-first-child: 5;
+    --z-index-cell: 0;
+    --z-index-timeline: 20;
+    --z-index-day-hour: 0;
+    --z-index-bound-box: 5;
+    --z-index-event: 10;
+    --z-index-event-modifying: 20;
+    --z-index-event-active: 20;
+    --z-index-event-is-pending-creation: 11;
+    --z-index-original-range-box: 7;
+    --z-index-handle-drag: 20;
+    --z-index-handle-drag-top: 30;
+    --z-index-handle-drag-bottom: 30;
+    --z-index-drag-box: 30;
+
+    --color-event-text: hsl(207, 65%, 93%);
+    --color-event-background: hsl(175, 68%, 30%);
+    --color-event-active-background: hsl(175, 68%, 50%);
+    --color-event-hover-background: hsl(175, 68%, 40%);
+    --color-event-shadow-1: hsla(202, 100%, 16%, 0.5);
+    --color-event-shadow-2: rgba(217, 217, 217, 0.5);
+    --color-header-shadow-1: hsla(0, 0%, 50%, 0.2);
+    --color-header-shadow-2: hsla(0, 0%, 85%, 0.239);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+input {
+    padding:0;
+}
+
+.root {
+    /* background-color: beige; */
+    height: 100vh;
+}
+
+.week-of-indicator {
+    text-align: center;
+}
+
+.scheduler-header {
+    width: 500px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+
+.scheduler-body {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+.scheduler-table {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: auto;
+    outline: 1px solid gray;
+    background: lightgray;
+    display: grid;
+    grid-template-columns: max(7%, var(--timeline-width, 50px)) 1fr;
+    grid-template-rows: var(--header-height, 50px) 1fr;
+    grid-template-areas: 
+        "day-labels day-labels"
+        "timeline layer-container"
+    ;
+}
+
+.timeline {
+    grid-area: timeline;
+    z-index: var(--z-index-timeline);
+}
+
+.day-hour {
+    
+    position: relative;
+    border-bottom: 1px solid #bbb;
+    background-color: white;
+    z-index: var(--z-index-day-hour);
+}
+
+.day-hour:first-child .time-label {
+    opacity: 0;
+}
+
+.time-label {
+    position: absolute;
+    width: 75%;
+    transform: translateY(-50%);
+    padding-left: 25%;
+    padding-right: 10px;
+    z-index: var(--z-index-time-label);
+    background-color: inherit;
+    font-size: 12px;
+}
+
+.day-labels {
+    grid-area: day-labels;
+    z-index: var(--z-index-day-label);
+}
+
+.header {
+    display: flex;
+    text-align: center;
+}
+
+.header > div {
+
+    text-align: left;
+    padding: 5px;
+    font-weight: bolder;
+    color: gray;
+    height: var(--header-height, 50px);
+    background-color: white;
+    flex-shrink: 0;
+}
+
+.header > div:not(:first-child) {
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+}
+
+.header > div:first-child {
+    width: max(7%, var(--timeline-width, 50px));
+    z-index: var(--z-index-header-first-child);
+    border-bottom: 1px solid #bbb;
+}
+
+.layer-container {
+    grid-area: layer-container;
+}
+
+.range-boxes {
+    position: absolute;
+}
+
+
+.cell {
+    position: absolute;
+    border-left: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    z-index: var(--z-index-cell);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.layer-container {
+    position: relative;
+}
+
+.calendar {
+    height: 100%;
+}
+
+
+.sticky-left {
+    position: sticky;
+    left: 0;
+}
+
+.sticky-top {
+    position: sticky;
+    top: 0;
+}
+
+.bound-box {
+    position: absolute;
+    background-color: gray;
+    z-index: var(--z-index-bound-box);
+}
+
+.bound-box.hours {
+    background-image: repeating-linear-gradient(45deg, #ccc, #ccc 5px, #dbdbdb 5px, #dbdbdb 10px);
+}
+
+.bound-box.closed-day-time {
+    background-image: repeating-linear-gradient(45deg, #777, #777 5px, #888 5px, #888 10px);
+}
+
+
+
+.range-box.event:not(.is-pending-creation):focus {
+    --background: var(--color-event-active-background);
+    z-index: var(--z-index-event-active);
+}
+
+.range-box.event:not(.is-pending-creation):focus-within {
+    --background: var(--color-event-active-background);
+    z-index: var(--z-index-event-active);
+}
+
+.event.dynamic:not(.is-pending-creation):hover {
+    --background: var(--color-event-hover-background);
+}
+
+
+.event {
+    z-index: var(--z-index-event);
+    border: 1px solid #000;
+    border-radius: 5px;
+    background-color: var(--background, var(--color-event-background));
+    color: var(--color-event-text);
+    position: absolute;
+    outline: none;
+
+    will-change: height;
+    contain: content;
+    /* user-select: none; */ /* For some reason, this line also prevents it from drag scolling */
+    display: block;
+    margin: 0;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event.is-pending-creation {
+    z-index: var(--z-index-event-is-pending-creation);
+    opacity: 0.75;
+}
+
+.event.dynamic:not(.is-pending-creation):focus,
+.event.dynamic:not(.is-pending-creation):hover {
+    box-shadow: 0 1px 5px 1px var(--color-event-shadow-1),
+        0 5px 10px 1px var(--color-event-shadow-2);
+}
+
+.event.dynamic:not(.is-pending-creation):focus-within {
+    box-shadow: 0 1px 5px 1px var(--color-event-shadow-1),
+      0 5px 10px 1px var(--color-event-shadow-2);
+}
+
+.event.modifying {
+    z-index: var(--z-index-event-modifying);
+}
+
+.original-range-box {
+    z-index: var(--z-index-original-range-box);
+    border: 3px dashed #333;
+    border-radius: 5px;
+    background-color: transparent;
+    position: absolute;
+    
+}
+
+
+.handle-drag {
+    height: 5px;
+    width: 5px;
+    background-color: var(--color-event-text);
+    z-index: var(--z-index-handle-drag);
+    position: absolute;
+    right:3px;
+    top: 3px;
+    cursor: move !important;
+}
+
+.handle.top {
+    height: 2px !important;
+    width: 20px !important;
+    background-color: var(--color-event-text);
+    z-index: var(--z-index-handle-drag-top);
+    position: absolute;
+    top:5px !important;
+    cursor: n-resize !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+.handle.bottom {
+    height: 2px !important;
+    width: 20px !important;
+    background-color: var(--color-event-text);
+    z-index: var(--z-index-handle-drag-bottom);
+    position: absolute;
+    bottom:5px !important;
+    cursor: s-resize !important;
+    left: 50% !important;
+    transform: translate(-50%) !important;
+}
+
+.event-content {
+    padding: 10px;
+    /* overflow: hidden; */
+    height: 100%;
+}
+
+.drag-box {
+    will-change: transform;
+    contain: strict;
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    left: 0;
+    top: 0;
+    z-index: var(--z-index-drag-box, 30);
+    border: 3px dashed var(--color-drag-box-border, darkgray);
+    background: var(--color-drag-box-background, lightgray);
+    width: 100px;
+    height: 100px;
+}
+
+.popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

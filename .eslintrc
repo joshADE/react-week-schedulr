@@ -29,6 +29,7 @@
     "react/jsx-handler-names": 0,
     "react/jsx-fragments": 0,
     "react/no-unused-prop-types": 0,
+    "no-unused-vars":"off",// this rule is not working for me, so I turned it off
     "import/export": 0
   }
 }

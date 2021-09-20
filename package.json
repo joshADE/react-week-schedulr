@@ -30,13 +30,13 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "@types/invariant": "^2.2.35",
     "@types/jest": "^25.1.4",
     "@types/node": "^12.12.38",
     "@types/react": "^16.9.27",
     "@types/react-dom": "^16.9.7",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
-    "microbundle-crl": "^0.13.10",
     "babel-eslint": "^10.0.3",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
@@ -50,6 +50,7 @@
     "eslint-plugin-react": "^7.17.0",
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages": "^2.2.0",
+    "microbundle-crl": "^0.13.10",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.4",
     "react": "^16.13.1",
@@ -59,5 +60,14 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "@rehooks/component-size": "^1.0.3",
+    "date-fns": "^2.24.0",
+    "invariant": "^2.2.4",
+    "moment": "^2.29.1",
+    "re-resizable": "^6.9.1",
+    "react-draggable": "^4.4.4",
+    "scroll-into-view-if-needed": "^2.2.28"
+  }
 }

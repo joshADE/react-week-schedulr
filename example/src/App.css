@@ -1,0 +1,97 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #333;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.tooltip {
+    padding: 0;
+}
+
+.tooltip button {
+    padding: 0.3125rem 0.5625rem;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+
+
+
+.scheduler-year {
+  text-align: center;
+}
+
+.month-button {
+  border-radius: 5px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.week-navigator {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+.week-indicator {
+  border-radius: 50%;
+  max-width: 8px;
+  width: 8px !important;
+  height: 8px !important;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+  margin:0 5px;
+  position: relative;
+}
+
+.week-indicator.current:after {
+  content: ' ';
+  display: block;
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 1px;
+  border: 2px solid grey;
+  transform: translate(-23%, -23%);
+}
+
+/* .scheduler-header {
+  display: none;
+}
+
+.scheduler-table {
+  border-radius: 20px;
+} */
+
+
+:root {
+  
+  /* --color-event-text: hsl(207, 65%, 93%);
+  --color-event-background: hsl(175, 68%, 30%);
+  --color-event-active-background: hsl(175, 68%, 50%);
+  --color-event-hover-background: hsl(175, 68%, 40%);
+  --color-event-shadow-1: hsla(202, 100%, 16%, 0.5);
+  --color-event-shadow-2: rgba(217, 217, 217, 0.5);
+  --color-header-shadow-1: hsla(0, 0%, 50%, 0.2);
+  --color-header-shadow-2: hsla(0, 0%, 85%, 0.239); */
+}
