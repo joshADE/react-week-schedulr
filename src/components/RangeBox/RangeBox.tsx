@@ -169,6 +169,7 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
 
           const maxHeight = grid.maxRectHeight;
           const cellHeight = grid.cellHeight;
+          const cellPrecisionHeight = grid.totalHeight / grid.numVerticalCells;
     
           const newSize = {
             height: delta.height + rect.height,
@@ -188,7 +189,7 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
             // this clamp is a temporary fix to solve a problem where if you 
             // rezise the top at max height it also moves the whole cell up instead
             // not needed for bottom position
-            newRect.top = clamp(newRect.top - delta.height,newRect.bottom - maxHeight + cellHeight,newRect.bottom + cellHeight);
+            newRect.top = clamp(newRect.top - delta.height,newRect.bottom - maxHeight + cellHeight,newRect.bottom - cellPrecisionHeight + cellHeight);
           } else if (direction.includes('bottom')) {
             newRect.bottom += delta.height;
           }

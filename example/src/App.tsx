@@ -94,7 +94,7 @@ const hours: Hours = {
 }
 
 const closedDaysTimes: ClosedDaysTimes = [
-  [new Date(2021, 8, 20, 3), new Date(2021, 8, 20, 16)]
+  [new Date(2021, 8, 20, 12), new Date(2021, 8, 20, 16)]
 ]
 
 const weeks = [0, 1, 2, 3, 4]

@@ -28,6 +28,7 @@ import addHours from "date-fns/addHours";
 import { getEarliestTimeRange } from "../../utils/getEarliestTimeRange";
 import scrollIntoView from "scroll-into-view-if-needed";
 import useComponentSize from "@rehooks/component-size";
+import { isAfter, isBefore } from "date-fns";
 
 export type Hours = {[id:number]: DateRange}
 export type ClosedDaysTimes = DateRange[];
@@ -103,6 +104,10 @@ interface WeekSchedulerProps {
   generateEvent: (eventDetails: EventDetails) => Events;
   hours?: Hours;
   closedDaysTimes?: ClosedDaysTimes;
+}
+
+const rangesOverlap = (rangeA: DateRange, rangeB: DateRange) => {
+  return isBefore(rangeA[0], rangeB[1]) && isAfter(rangeA[1], rangeB[0]);
 }
 
 export const daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
@@ -289,10 +294,8 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
     if (closedDaysTimes){
       for(let i = 0; i < closedDaysTimes.length; i++){
         const closedDayTime = closedDaysTimes[i];
-        const start = closedDayTime[0];
-        const end = closedDayTime[1];
-        if (moment(dateRange[0]).isBetween(start, end, undefined, "()") ||
-        moment(dateRange[1]).isBetween(start, end, undefined, "()")){
+        
+        if (rangesOverlap(dateRange, closedDayTime)){
           return false;
         }
       }
@@ -307,9 +310,8 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
         allEvents.push(...Object.entries(staticEvents).filter(value => value[0] !== id).map(value => value[1]));
       }
       for(let i = 0; i < allEvents.length; i++){
-        const { range:[start, end] } = allEvents[i];
-        if (moment(dateRange[0]).isBetween(start, end, undefined, "()") ||
-        moment(dateRange[1]).isBetween(start, end, undefined, "()")){
+        const { range } = allEvents[i];
+        if (rangesOverlap(dateRange, range)){
           return false;
         }
       }
