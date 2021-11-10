@@ -462,19 +462,21 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
           addHours(originDate, defaultHours[1]),
         ],
       );
-      const rect = grid.getRectFromCell(range[0]);
-      const { top, bottom } = rect;
+      if (range[0]){
+        const rect = grid.getRectFromCell(range[0]);
+        const { top, bottom } = rect;
 
-      if (top === 0 && bottom === 0) {
-        return;
+        if (top === 0 && bottom === 0) {
+          return;
+        }
+
+        // IE, Edge do not support it
+        if (!('scrollBy' in root.current)) {
+          return;
+        }
+
+        root.current.scrollBy(0, top);
       }
-
-      // IE, Edge do not support it
-      if (!('scrollBy' in root.current)) {
-        return;
-      }
-
-      root.current.scrollBy(0, top);
 
       setWasInitialScrollPerformed(true);
     },
