@@ -1,6 +1,6 @@
 {
   "name": "react-week-schedulr",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A weekly calendar component for React with scheduling capabilities.",
   "author": "joshADE",
   "license": "MIT",
