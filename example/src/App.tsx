@@ -170,8 +170,8 @@ const App = () => {
         eventRootComponent={EventRoot}
         eventContentComponent={renderContent}
         maxVerticalPrecision={360}
-        verticalPrecision={5}
-        visualGridVerticalPrecision={120}
+        verticalPrecision={5}//{5}
+        visualGridVerticalPrecision={60}//{120}
         originDate={originDay}
       />
     </div>
