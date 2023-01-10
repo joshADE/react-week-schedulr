@@ -502,13 +502,45 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
 
 
   const handleCellClick = useCallback(
-    (dayIndex: number, timeIndex: number) => (event: React.MouseEvent) => {
+    (dayIndex: number, timeIndex: number) => (event: React.MouseEvent<HTMLDivElement>) => {
       if (!grid || newEventsAddedTo === "none") {
         return;
       }
 
+      
+
+      const target = (event.target as HTMLElement);
+
+      // const offset = (grid.cellHeight * (timeIndex * (verticalPrecision / visualGridVerticalPrecision)));
+      let percentageClick = 0;
+      if (target){
+        const rect = target.getBoundingClientRect();
+        if (rect){
+          console.log(1 * rect.top);
+          percentageClick = event.clientY - 1 * rect.top // - event.currentTarget.offsetTop // or offset;
+          percentageClick = (percentageClick / 100.0);
+        }
+      }
+       
+
       const spanY = toY(cellClickPrecision);
-      const precisionedTimeIndex = timeIndex * (verticalPrecision / visualGridVerticalPrecision);
+      let precisionedTimeIndex = timeIndex * (verticalPrecision / visualGridVerticalPrecision);
+      if (verticalPrecision < visualGridVerticalPrecision){
+        const factor = visualGridVerticalPrecision / (verticalPrecision * 1.0);
+        const percentage = 1 / (factor * 1.0);
+        
+        // console.log("percentage: ", percentage);
+        // console.log('percentageClick: ', percentageClick)
+        if (percentageClick > percentage){
+          const numberOfTimesFactor = Math.floor(percentageClick / percentage);
+          const rounded = Math.round(percentageClick - (numberOfTimesFactor * percentage));
+          precisionedTimeIndex +=
+            ((numberOfTimesFactor + rounded) * percentage);
+        }else{
+          precisionedTimeIndex += Math.floor(percentageClick / percentage) * percentage;
+        }
+        
+      }
       const cell = {
         startX: dayIndex,
         startY: precisionedTimeIndex,
@@ -517,6 +549,8 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
         spanY,
         spanX: getSpan(dayIndex, dayIndex),
       };
+
+      // console.log(event.clientY, offset, percentageClick, timeIndex * (verticalPrecision / visualGridVerticalPrecision), cell);
 
       const dateRanges = cellInfoToDateRanges(cell);
 
