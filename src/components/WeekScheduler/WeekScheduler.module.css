@@ -21,8 +21,8 @@
 
     --color-event-text: hsl(207, 65%, 93%);
     --color-event-background: hsl(175, 68%, 30%);
-    --color-event-active-background: hsl(175, 68%, 50%);
-    --color-event-hover-background: hsl(175, 68%, 40%);
+    --color-event-active-background: hsl(175, 68%, 40%);
+    --color-event-hover-background: hsl(175, 68%, 50%);
     --color-event-shadow-1: hsla(202, 100%, 16%, 0.5);
     --color-event-shadow-2: rgba(217, 217, 217, 0.5);
     --color-header-shadow-1: hsla(0, 0%, 50%, 0.2);
