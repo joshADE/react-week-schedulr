@@ -11,6 +11,7 @@ export const createGrid = ({
     numHorizontalCells,
     numVisualVerticalCells,
     maxRangeHeightSpan,
+    minRangeHeightSpan,
   }: {
     totalHeight: number;
     totalWidth: number;
@@ -18,10 +19,12 @@ export const createGrid = ({
     numHorizontalCells: number;
     numVisualVerticalCells: number;
     maxRangeHeightSpan: number;
+    minRangeHeightSpan: number;
   }): Grid => {
     const cellHeight = totalHeight / numVisualVerticalCells;
     const cellWidth = totalWidth / numHorizontalCells;
     const cellPrecisionHeight = totalHeight / numVerticalCells;
+    const ratioVerticalToVisualVertical = numVisualVerticalCells / numVerticalCells;
     return {
       totalHeight,
       totalWidth,
@@ -30,7 +33,8 @@ export const createGrid = ({
       cellWidth,
       cellHeight,
       maxRectHeight: cellHeight * maxRangeHeightSpan,
-  
+      minRectHeight: cellHeight * minRangeHeightSpan,
+      ratioVerticalToVisualVertical,
       getRectFromCell(data: CellInfo) {
         const { endX, startX, endY, startY, spanX, spanY } = data;
         const bottom = endY * this.cellHeight;
@@ -56,8 +60,12 @@ export const createGrid = ({
         };
       },
   
-      getCellFromRect(data: Rect, dragging = false) {
+      getCellFromRect(data: Rect, dragging = false, ratioOffset = {}) {
 
+        // offset to allow setting the postion on resizes to points where the visual grid vertical precision allows
+        // but not the vertical precision (for the case where vertical precision > visual grid vertical precision)
+        const startYOffset = ratioOffset.startY === undefined ? 0 : ratioOffset.startY;
+        const endYOffset = ratioOffset.endY === undefined ? 0 : ratioOffset.endY;
         let startX, startY, endX, endY;
 
         if (dragging){
@@ -85,7 +93,7 @@ export const createGrid = ({
           );
           startY = 
           Math.round(data.top / cellPrecisionHeight)
-          * (numVisualVerticalCells / numVerticalCells);
+          * (numVisualVerticalCells / numVerticalCells) + startYOffset;
           endX = clamp(
             Math.round(data.right / this.cellWidth),
             0,
@@ -93,10 +101,11 @@ export const createGrid = ({
           );
           endY = 
             Math.round(data.bottom / cellPrecisionHeight)
-            * (numVisualVerticalCells / numVerticalCells);
+            * (numVisualVerticalCells / numVerticalCells) + endYOffset;
         }
         const spanX = clamp(getSpan(startX, endX), 1, numHorizontalCells);
-        const spanY = clamp(getSpan(startY, endY), (numVisualVerticalCells / numVerticalCells), maxRangeHeightSpan);
+        const spanY = clamp(getSpan(startY, endY), minRangeHeightSpan, maxRangeHeightSpan);
+
         return {
           spanX,
           spanY,

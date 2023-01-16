@@ -52,8 +52,10 @@ export type Grid = {
     numVerticalCells: number;
     numHorizontalCells: number;
     maxRectHeight: number;
+    minRectHeight: number;
+    ratioVerticalToVisualVertical: number;
     getRectFromCell(cell: CellInfo): Rect;
-    getCellFromRect(rect: Rect, dragging?: boolean): CellInfo;
+    getCellFromRect(rect: Rect, dragging?: boolean, ratioOffset? : { startY?: number; endY?: number; }): CellInfo;
 };
 
 export type MapCellInfoToDateRange = (

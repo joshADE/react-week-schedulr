@@ -169,8 +169,10 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
 
           const maxHeight = grid.maxRectHeight;
           const cellHeight = grid.cellHeight;
-          const cellPrecisionHeight = grid.totalHeight / grid.numVerticalCells;
+          const cellPrecisionHeight = grid.totalHeight / grid.numVerticalCells; // grid.minRectHeight;// grid.totalHeight / grid.numVerticalCells;
     
+          // const scaleHeight = Math.max(0, Math.floor(grid.ratioVerticalToVisualVertical / 2)) * cellHeight;
+
           const newSize = {
             height: delta.height + rect.height,
             width: delta.width + rect.width,
@@ -181,8 +183,8 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
             ...newSize,
           };
 
-          console.log(maxHeight)
-
+          let ratioStartOffset = 0;
+          let ratioEndOffset = 0;
     
           if (direction.includes('top')) {
             // newRect.top -= delta.height;
@@ -193,8 +195,31 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
           } else if (direction.includes('bottom')) {
             newRect.bottom += delta.height;
           }
+          
+
+          // account for the snapping behaviour when resizing that snaps to the nearest vertical precision mark
+          // and skip the min height when the verticalPrecision > visualGrigVericalPrecision
+          if (grid.ratioVerticalToVisualVertical > 1){
+              const newStartY = Math.round(newRect.top / cellPrecisionHeight) * grid.ratioVerticalToVisualVertical;
+              const newVisualStartY = Math.round(newRect.top / grid.cellHeight);
+              if (newStartY - newVisualStartY !== 0){
+                ratioStartOffset = newVisualStartY - newStartY;
+                if (newRect.top <= 0){
+                  ratioStartOffset = Math.max(0, ratioStartOffset);
+                }
+              } 
+              const newEndY = Math.round(newRect.bottom / cellPrecisionHeight) * grid.ratioVerticalToVisualVertical;
+              const newVisualEndY = Math.round(newRect.bottom / grid.cellHeight);
+              if (newEndY - newVisualEndY !== 0){
+                ratioEndOffset = newVisualEndY - newEndY;
+                if (newRect.bottom >= grid.totalHeight - cellHeight){
+                  ratioEndOffset = Math.min(0, ratioEndOffset);
+                }
+              } 
+          }
+
     
-          const { spanY, startY, endY } = grid.getCellFromRect(newRect);
+          const { spanY, startY, endY } = grid.getCellFromRect(newRect, false, { startY: ratioStartOffset, endY: ratioEndOffset});
           const newCell = {
             ...cell,
             spanY,

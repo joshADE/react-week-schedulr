@@ -257,6 +257,10 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
     
   }, [toY, maxVerticalPrecision]);
 
+    const minRangeHeightSpan = useMemo(() => {
+      return toY(verticalPrecision)
+    }, [toY, verticalPrecision])
+
 
   const grid = useMemo<Grid | null>(() => {
     if (totalHeight === null || totalWidth === null) {
@@ -270,14 +274,15 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
       numVerticalCells,
       numVisualVerticalCells,
       maxRangeHeightSpan,
+      minRangeHeightSpan,
     });
-  }, [totalHeight, totalWidth, numHorizontalCells, numVerticalCells, numVisualVerticalCells, maxRangeHeightSpan, cellHeight, cellWidth]);
+  }, [totalHeight, totalWidth, numHorizontalCells, numVerticalCells, numVisualVerticalCells, maxRangeHeightSpan, minRangeHeightSpan, cellHeight, cellWidth]);
 
 
 
 
   const checkValidDateRange = useCallback((id: string, dateRange: DateRange) => {
-    console.log('checking valid date');
+    // console.log('checking valid date');
     // check if within hours
     const dayOfWeek = dateRange[0].getDay();
 
@@ -516,7 +521,7 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
       if (target){
         const rect = target.getBoundingClientRect();
         if (rect){
-          console.log(1 * rect.top);
+          // console.log(1 * rect.top);
           percentageClick = event.clientY - 1 * rect.top // - event.currentTarget.offsetTop // or offset;
           percentageClick = (percentageClick / 100.0);
         }
