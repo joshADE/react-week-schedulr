@@ -67,6 +67,12 @@ interface WeekSchedulerProps {
   verticalPrecision?: number;
 
   /**
+   * Show markers on the grid to indicate the increments of the vertical precision
+   * @default false
+   */
+  showVerticalPrecisionMarkers?: boolean;
+
+  /**
    * The minimum number of minutes for an time block
    * created with a single click.
    * @default visualGridVerticalPrecision
@@ -140,6 +146,7 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
   onEventClick,
   eventContentComponent,
   eventRootComponent,
+  showVerticalPrecisionMarkers,
 }) => {
 
 
@@ -149,6 +156,7 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
   const numVisualVerticalCells =
     NumberOfMinutesInADay / visualGridVerticalPrecision;
   const times: number[] = [];
+  const verticalMarkers: number[] = [];
   const schedulerRef = useRef<HTMLDivElement>(null);
   const parentRef = useRef<HTMLDivElement>(null);
   const root = useRef<HTMLDivElement>(null);
@@ -187,6 +195,10 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
     times.push(i);
   }
 
+
+  for (let i = 0; i < numVerticalCells; i++) {
+    verticalMarkers.push(i);
+  }
 
 
   useEffect(
@@ -590,6 +602,9 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
     spanY: 1,
   });
 
+  const markerHeight = grid ? (grid.cellHeight * grid.ratioVerticalToVisualVertical) : undefined;
+  const markerWidth = grid ? grid.cellWidth : undefined;
+
   return (
     <div className={styles.root} style={{ height, width}}>
       <div className={styles["scheduler-header"]}>
@@ -685,28 +700,40 @@ const WeekScheduler: React.FC<WeekSchedulerProps> = ({
             )}
             <div className={styles.calendar} ref={parentRef}>
               {daysOfWeek.map((dayOfWeek) => (
-                <div key={dayOfWeek} className={styles["day-column"]}>
-                  {times.map((timeIndex) => (
-                    <Cell
-                      rect={grid?.getRectFromCell({
-                        startX: dayOfWeek,
-                        startY: timeIndex,
-                        endX: dayOfWeek + 1,
-                        endY: timeIndex + 1,
-                        spanX: 1,
-                        spanY: 1,
-                      })}
-                      key={timeIndex}
-                      onClick={handleCellClick(
-                        dayOfWeek,
-                        timeIndex *
-                          (numVerticalCells / numVisualVerticalCells),
-                      )}
-                      timeIndex={timeIndex}
-                    >
-                      {/* {dayOfWeek}x{timeIndex} */}
-                    </Cell>
-                  ))}
+                <div key={dayOfWeek} className={styles["day-column-container"]}>
+                  {showVerticalPrecisionMarkers ?
+                  <div className={styles["day-marker-column"]}>
+                    {verticalMarkers.map(index => (
+                      <div 
+                        key={index}
+                        className={styles["time-marker"]}
+                        style={{ width: markerWidth , height: markerHeight, top: markerHeight ? markerHeight * index : undefined, left: markerWidth ? markerWidth * dayOfWeek : undefined }}
+                      />
+                    ))}
+                  </div>: null}
+                  <div className={styles["day-column"]}>
+                    {times.map((timeIndex) => (
+                      <Cell
+                        rect={grid?.getRectFromCell({
+                          startX: dayOfWeek,
+                          startY: timeIndex,
+                          endX: dayOfWeek + 1,
+                          endY: timeIndex + 1,
+                          spanX: 1,
+                          spanY: 1,
+                        })}
+                        key={timeIndex}
+                        onClick={handleCellClick(
+                          dayOfWeek,
+                          timeIndex *
+                            (numVerticalCells / numVisualVerticalCells),
+                        )}
+                        timeIndex={timeIndex}
+                      >
+                        {/* {dayOfWeek}x{timeIndex} */}
+                      </Cell>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

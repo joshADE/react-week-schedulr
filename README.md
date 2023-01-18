@@ -83,8 +83,9 @@ const Example = () => {
         closedDaysTimes={closedDaysTimes}
         eventsOverlap
         maxVerticalPrecision={360}  // max time in minutes an event can span
-        verticalPrecision={5} // min time in minutes an event can span
+        verticalPrecision={30} // min time in minutes an event can span
         visualGridVerticalPrecision={120} // grid incriments in minutes
+        showVerticalPrecisionMarkers // show markers
         originDate={originDate}
       />
 

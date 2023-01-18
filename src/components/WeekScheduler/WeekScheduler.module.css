@@ -162,7 +162,8 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: #fff5;
+    z-index: calc(var(--z-index-event, 5) - 2);
 }
 
 .layer-container {
@@ -172,8 +173,30 @@ input {
 .calendar {
     top: 0px;
     height: 100%;
+    background-color: #fff;
 }
 
+.day-column-container {
+    position: relative;
+}
+
+.day-marker-column {
+    position: absolute;
+    top: 0;
+}
+
+.time-marker {
+    position: absolute;
+    border-top: 1px dashed #3336;
+    border-bottom: 1px dashed #3336;
+    border-left: 1px solid #0000;
+    border-right: 1px solid #0000;
+    z-index: calc(var(--z-index-event, 5) - 3);
+}
+
+.calendar .day-column {
+    position: absolute;
+}
 
 .sticky-left {
     position: sticky;
@@ -193,10 +216,12 @@ input {
 
 .bound-box.hours {
     background-image: repeating-linear-gradient(45deg, #ccc, #ccc 5px, #dbdbdb 5px, #dbdbdb 10px);
+    z-index: calc(var(--z-index-event, 5) - 1);
 }
 
 .bound-box.closed-day-time {
     background-image: repeating-linear-gradient(45deg, #777, #777 5px, #888 5px, #888 10px);
+    z-index: calc(var(--z-index-event, 5) - 1);
 }
 
 
