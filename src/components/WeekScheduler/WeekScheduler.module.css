@@ -252,12 +252,20 @@ input {
 
     will-change: height;
     contain: content;
-    /* user-select: none; */ /* For some reason, this line also prevents it from drag scolling */
+    user-select: none; /* For some reason, this line also prevents it from drag scolling */
     display: block;
     margin: 0;
     font-size: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.event.not-moving {
+    cursor: grab;
+}
+
+.event.is-moving {
+    cursor: grabbing;
 }
 
 .event.is-pending-creation {
@@ -290,7 +298,7 @@ input {
 }
 
 
-.handle-drag {
+/* .handle-drag {
     height: 5px;
     width: 5px;
     background-color: var(--color-event-text);
@@ -299,6 +307,10 @@ input {
     right:3px;
     top: 3px;
     cursor: move !important;
+} */
+
+.handle {
+    z-index: calc(var(--z-index-event, 50) + 20);
 }
 
 .handle.top {

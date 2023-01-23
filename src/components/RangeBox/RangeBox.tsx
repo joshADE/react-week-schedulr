@@ -49,6 +49,7 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
     const [modifiedCell, setModifiedCell] = useState(cell);
     const [tempCell, setTempCell] = useState(modifiedCell);
     const [isModifying, setModifying] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
     const originalRect = useMemo(() => grid.getRectFromCell(cell), [cell, grid]);
     const rect = useMemo(() => grid.getRectFromCell(modifiedCell), [
       modifiedCell,
@@ -74,6 +75,7 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
 
       const handleStop = useCallback(() => {
         setModifying(false);
+        setIsDragging(false);
         if (!onChange) {
           return;
         }
@@ -148,6 +150,7 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
     
           setModifiedCell(newCell);
           setModifying(true);
+          setIsDragging(true);
         },
         [grid, rect, moveAxis, cell, setModifiedCell, setModifying],
       );
@@ -286,8 +289,8 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
                 onStart={handleStart}
                 onDrag={handleDrag}
                 onStop={handleStop}
-                handle={`.${styles["handle-drag"]}`}
-                // cancel=".handle, .handle.bottom, .handle.top"
+                // handle={`.${styles.event}`}
+                cancel={`.${styles.handle}, .${styles.bottom}, .${styles.top}`}
             >
                   <EventRootComponent
                     tabIndex="0"
@@ -301,11 +304,11 @@ const RangeBox: React.FC<RangeBoxProps & SharedScheduleProps> = ({
                     id={id}
                     isActive={isActive}
                     ref={ref}
-                    className={`${styles["range-box"]} ${styles.event} ${isModifying? styles.modifying: ''} ${isActive? styles.active: ''} ${className}`} 
+                    className={`${styles["range-box"]} ${styles.event} ${isMovable? isDragging ? styles["is-moving"] : styles["not-moving"] : "" } ${isModifying? styles.modifying: ''} ${isActive? styles.active: ''} ${className}`} 
                     style={{ width, height}}
                     type={type}
                   >
-                  {isMovable && <div className={styles["handle-drag"]} />}
+                  {/* {isMovable && <div className={styles["handle-drag"]} />} */}
                 <Resizable
                   size={{width, height}}
                   key={`${rangeIndex}.${cellIndex}.${cellArray.length}.${originalRect.top}.${originalRect.left}`}
